@@ -6,7 +6,7 @@ import java.sql.Timestamp;
 
 
 @Entity
-@Table(name = "curve_point")
+@Table(name = "curvepoint")
 public class CurvePoint {
 
     @Id

@@ -3,42 +3,72 @@ package com.pcs.model;
 import jakarta.persistence.*;
 
 import java.sql.Timestamp;
+import java.util.Objects;
 
 @Entity
-@Table(name = "Bidlist")
+@Table(name = "bidlist")
 public class BidList {
     // TODO: Map columns in data table BIDLIST with corresponding java fields
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "bid_list_id")
     private Integer bidListId;
+    @Column(name = "account")
     private String account;
+    @Column(name = "type")
     private String type;
+    @Column(name = "bid_quantity")
     private Double bidQuantity;
+    @Column(name = "ask_quantity")
     private Double askQuantity;
+    @Column(name = "bid")
     private Double bid;
+    @Column(name = "ask")
     private Double ask;
+    @Column(name = "benchmark")
     private String benchmark;
+    @Column(name = "bid_list_date")
     private Timestamp bidListDate;
+    @Column(name = "commentary")
     private String commentary;
+    @Column(name = "security")
     private String security;
+    @Column(name = "status")
     private String status;
+    @Column(name = "trader")
     private String trader;
+    @Column(name = "book")
     private String book;
+    @Column(name = "creation_name")
     private String creationName;
+    @Column(name = "creation_date")
     private Timestamp creationDate;
+    @Column(name = "revision_name")
     private String revisionName;
+    @Column(name = "revision_date")
     private Timestamp revisionDate;
+    @Column(name = "deal_name")
     private String dealName;
+    @Column(name = "deal_type")
     private String dealType;
+    @Column(name = "source_list_id")
     private String sourceListId;
+    @Column(name = "side")
     private String side;
 
 
     public BidList() {
     }
 
-    //bon constructeur ?  déduit de tests
     public BidList(String account, String type, Double bidQuantity) {
+        this.account = account;
+        this.type = type;
+        this.bidQuantity = bidQuantity;
+    }
+
+    public BidList(Integer bidListId, String account, String type, Double bidQuantity) {
+        this.bidListId = bidListId;
         this.account = account;
         this.type = type;
         this.bidQuantity = bidQuantity;
@@ -219,4 +249,45 @@ public class BidList {
     public void setSide(String side) {
         this.side = side;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof BidList bidList)) return false;
+        return Objects.equals(getBidListId(), bidList.getBidListId()) && Objects.equals(getAccount(), bidList.getAccount()) && Objects.equals(getType(), bidList.getType()) && Objects.equals(getBidQuantity(), bidList.getBidQuantity()) && Objects.equals(getAskQuantity(), bidList.getAskQuantity()) && Objects.equals(getBid(), bidList.getBid()) && Objects.equals(getAsk(), bidList.getAsk()) && Objects.equals(getBenchmark(), bidList.getBenchmark()) && Objects.equals(getBidListDate(), bidList.getBidListDate()) && Objects.equals(getCommentary(), bidList.getCommentary()) && Objects.equals(getSecurity(), bidList.getSecurity()) && Objects.equals(getStatus(), bidList.getStatus()) && Objects.equals(getTrader(), bidList.getTrader()) && Objects.equals(getBook(), bidList.getBook()) && Objects.equals(getCreationName(), bidList.getCreationName()) && Objects.equals(getCreationDate(), bidList.getCreationDate()) && Objects.equals(getRevisionName(), bidList.getRevisionName()) && Objects.equals(getRevisionDate(), bidList.getRevisionDate()) && Objects.equals(getDealName(), bidList.getDealName()) && Objects.equals(getDealType(), bidList.getDealType()) && Objects.equals(getSourceListId(), bidList.getSourceListId()) && Objects.equals(getSide(), bidList.getSide());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getBidListId(), getAccount(), getType(), getBidQuantity(), getAskQuantity(), getBid(), getAsk(), getBenchmark(), getBidListDate(), getCommentary(), getSecurity(), getStatus(), getTrader(), getBook(), getCreationName(), getCreationDate(), getRevisionName(), getRevisionDate(), getDealName(), getDealType(), getSourceListId(), getSide());
+    }
+
+    @Override
+    public String toString() {
+        return "BidList{" +
+                "bidListId=" + bidListId +
+                ", account='" + account + '\'' +
+                ", type='" + type + '\'' +
+                ", bidQuantity=" + bidQuantity +
+                ", askQuantity=" + askQuantity +
+                ", bid=" + bid +
+                ", ask=" + ask +
+                ", benchmark='" + benchmark + '\'' +
+                ", bidListDate=" + bidListDate +
+                ", commentary='" + commentary + '\'' +
+                ", security='" + security + '\'' +
+                ", status='" + status + '\'' +
+                ", trader='" + trader + '\'' +
+                ", book='" + book + '\'' +
+                ", creationName='" + creationName + '\'' +
+                ", creationDate=" + creationDate +
+                ", revisionName='" + revisionName + '\'' +
+                ", revisionDate=" + revisionDate +
+                ", dealName='" + dealName + '\'' +
+                ", dealType='" + dealType + '\'' +
+                ", sourceListId='" + sourceListId + '\'' +
+                ", side='" + side + '\'' +
+                '}';
+    }
+
 }

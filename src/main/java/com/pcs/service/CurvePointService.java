@@ -17,12 +17,12 @@ public class CurvePointService {
     @Autowired
     private CurvePointRepository curvePointRepository;
 
+
     private static final Logger logger = LogManager.getLogger(CurvePointService.class);
 
     public List<CurvePoint> getCurvePoints() {
         return curvePointRepository.findAll();
     }
-
 
     public CurvePoint getById(Integer id) throws IllegalArgumentException {
         Optional<CurvePoint> curvePoint = curvePointRepository.findById(id);

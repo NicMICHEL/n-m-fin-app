@@ -1,54 +1,96 @@
 package com.pcs.controller;
 
 import com.pcs.model.Trade;
+import com.pcs.service.TradeService;
+import com.pcs.web.dto.TradeDTO;
+import com.pcs.web.mapper.TradeMapper;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
+
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Controller
 public class TradeController {
-    // TODO: Inject Trade service
+
+    @Autowired
+    private TradeService tradeService;
+    @Autowired
+    private TradeMapper tradeMapper;
+
 
     @RequestMapping("/trade/list")
-    public String home(Model model)
-    {
-        // TODO: find all Trade, add to model
+    public String home(Model model) {
+        model.addAttribute("tradeDTOs", getTradeDTOs());
         return "trade/list";
     }
 
     @GetMapping("/trade/add")
-    public String addUser(Trade bid) {
+    public String showTradeAddForm(TradeDTO tradeDTO) {
         return "trade/add";
     }
 
     @PostMapping("/trade/validate")
-    public String validate(@Valid Trade trade, BindingResult result, Model model) {
-        // TODO: check data valid and save to db, after saving return Trade list
+    public String addTrade(@Valid TradeDTO tradeDTO, BindingResult result, Model model) {
+        if (!result.hasErrors()) {
+            Trade trade = tradeMapper.toTrade(tradeDTO);
+            trade.setCreationDate(Timestamp.valueOf(LocalDateTime.now()));
+            tradeService.save(trade);
+            return "redirect:/trade/list";
+        }
         return "trade/add";
     }
 
     @GetMapping("/trade/update/{id}")
-    public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        // TODO: get Trade by Id and to model then show to the form
+    public String showTradeUpdateForm(@PathVariable("id") Integer id, Model model) throws IllegalArgumentException {
+        model.addAttribute(
+                "tradeDTO", tradeMapper.toTradeDTO(tradeService.getById(id)));
         return "trade/update";
     }
 
     @PostMapping("/trade/update/{id}")
-    public String updateTrade(@PathVariable("id") Integer id, @Valid Trade trade,
-                             BindingResult result, Model model) {
-        // TODO: check required fields, if valid call service to update Trade and return Trade list
-        return "redirect:/trade/list";
+    public String updateTrade(@PathVariable("id") Integer id, @Valid TradeDTO tradeDTO,
+                              BindingResult result, Model model) throws IllegalArgumentException {
+        if (!result.hasErrors()) {
+            Trade trade = tradeMapper.toTrade(tradeDTO);
+            trade.setRevisionDate(Timestamp.valueOf(LocalDateTime.now()));
+            tradeService.update(trade);
+            return "redirect:/trade/list";
+        }
+        // maj à tradeDTO cf aussi  bidlist controll l 77
+        model.addAttribute("tradeDTO", tradeDTO);
+        return "trade/update";
     }
 
     @GetMapping("/trade/delete/{id}")
-    public String deleteTrade(@PathVariable("id") Integer id, Model model) {
-        // TODO: Find Trade by Id and delete the Trade, return to Trade list
+    public String deleteTrade(@PathVariable("id") Integer id, Model model) throws IllegalArgumentException {
+        tradeService.deleteById(id);
         return "redirect:/trade/list";
     }
+
+    public List<TradeDTO> getTradeDTOs() {
+        List<Trade> trades = tradeService.getTrades();
+        List<TradeDTO> tradeDTOs = new ArrayList<>();
+        trades.forEach(trade -> {
+            tradeDTOs.add(tradeMapper.toTradeDTO(trade));
+        });
+        return tradeDTOs;
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ResponseBody
+    public String handleIllegalArgumentException
+            (IllegalArgumentException illegalArgumentException) {
+        return illegalArgumentException.getMessage();
+    }
+
 }

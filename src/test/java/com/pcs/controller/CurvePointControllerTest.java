@@ -1,7 +1,6 @@
 package com.pcs.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.pcs.controller.CurvePointController;
 import com.pcs.model.CurvePoint;
 import com.pcs.service.CurvePointService;
 import com.pcs.web.dto.CurvePointDTO;
@@ -33,13 +32,10 @@ public class CurvePointControllerTest {
 
     @Autowired
     private CurvePointController curvePointController;
-
     @MockBean
     private CurvePointService curvePointService;
-
     @MockBean
     private CurvePointMapper curvePointMapper;
-
     @Autowired
     private MockMvc mockMvc;
 

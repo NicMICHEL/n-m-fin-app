@@ -1,55 +1,95 @@
 package com.pcs.controller;
 
 import com.pcs.model.BidList;
+import com.pcs.service.BidListService;
+import com.pcs.web.dto.BidListDTO;
+import com.pcs.web.mapper.BidListMapper;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 
 @Controller
 public class BidListController {
-    // TODO: Inject Bid service
+
+    @Autowired
+    private BidListService bidListService;
+    @Autowired
+    private BidListMapper bidListMapper;
+
 
     @RequestMapping("/bidList/list")
-    public String home(Model model)
-    {
-        // TODO: call service find all bids to show to the view
+    public String home(Model model) {
+        model.addAttribute("bidListDTOs", getBidListDTOs());
         return "bidList/list";
     }
 
     @GetMapping("/bidList/add")
-    public String addBidForm(BidList bid) {
+    public String showBidListAddForm(BidListDTO bidListDTO) {
         return "bidList/add";
     }
 
     @PostMapping("/bidList/validate")
-    public String validate(@Valid BidList bid, BindingResult result, Model model) {
-        // TODO: check data valid and save to db, after saving return bid list
+    public String addBidList(@Valid BidListDTO bidListDTO, BindingResult result, Model model) {
+        if (!result.hasErrors()) {
+            BidList bidList = bidListMapper.toBidList(bidListDTO);
+            bidList.setCreationDate(Timestamp.valueOf(LocalDateTime.now()));
+            bidListService.save(bidList);
+            return "redirect:/bidList/list";
+        }
         return "bidList/add";
     }
 
     @GetMapping("/bidList/update/{id}")
-    public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        // TODO: get Bid by Id and to model then show to the form
+    public String showBidListUpdateForm(@PathVariable("id") Integer id, Model model) throws IllegalArgumentException {
+        model.addAttribute(
+                "bidListDTO", bidListMapper.toBidListDTO(bidListService.getById(id)));
         return "bidList/update";
     }
 
     @PostMapping("/bidList/update/{id}")
-    public String updateBid(@PathVariable("id") Integer id, @Valid BidList bidList,
-                             BindingResult result, Model model) {
-        // TODO: check required fields, if valid call service to update Bid and return list Bid
-        return "redirect:/bidList/list";
+    public String updateBidList(@PathVariable("id") Integer id, @Valid BidListDTO bidListDTO,
+                                BindingResult result, Model model) throws IllegalArgumentException {
+        if (!result.hasErrors()) {
+            BidList bidList = bidListMapper.toBidList(bidListDTO);
+            bidList.setRevisionDate(Timestamp.valueOf(LocalDateTime.now()));
+            bidListService.update(bidList);
+            return "redirect:/bidList/list";
+        }
+        model.addAttribute("BidListDTO", bidListDTO);
+        return "bidList/update";
     }
 
     @GetMapping("/bidList/delete/{id}")
-    public String deleteBid(@PathVariable("id") Integer id, Model model) {
-        // TODO: Find Bid by Id and delete the bid, return to Bid list
+    public String deleteBidList(@PathVariable("id") Integer id, Model model) throws IllegalArgumentException {
+        bidListService.deleteById(id);
         return "redirect:/bidList/list";
     }
+
+    public List<BidListDTO> getBidListDTOs() {
+        List<BidList> bidLists = bidListService.getBidLists();
+        List<BidListDTO> bidListDTOS = new ArrayList<>();
+        bidLists.forEach(bidList -> {
+            bidListDTOS.add(bidListMapper.toBidListDTO(bidList));
+        });
+        return bidListDTOS;
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    @ResponseBody
+    public String handleIllegalArgumentException
+            (IllegalArgumentException illegalArgumentException) {
+        return illegalArgumentException.getMessage();
+    }
+
 }

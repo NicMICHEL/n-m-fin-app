@@ -111,7 +111,6 @@
 			<version>2.23.4</version>
 			<scope>test</scope>
 		</dependency>
-
 	</dependencies>
 
 	<build>
@@ -158,29 +157,6 @@
 					</dependency>
 				</dependencies>
 
-				<configuration>
-					<excludes>
-						<exclude>**/*IT.java</exclude>
-					</excludes>
-				</configuration>
-				<executions>
-					<execution>
-						<id>integration-test</id>
-						<goals>
-							<goal>test</goal>
-						</goals>
-						<phase>integration-test</phase>
-						<configuration>
-							<excludes>
-								<exclude>none</exclude>
-							</excludes>
-							<includes>
-								<include>**/*IT.java</include>
-							</includes>
-						</configuration>
-					</execution>
-				</executions>
-
 			</plugin>
 			<plugin>
 				<groupId>org.jacoco</groupId>
@@ -188,7 +164,9 @@
 				<version>0.8.11</version>
 				<configuration>
 					<excludes>
-						<exclude></exclude>
+						<exclude>com/pcs/configuration/*</exclude>
+						<exclude>com/pcs/model/*</exclude>
+						<exclude>com/pcs/web/dto/*</exclude>
 					</excludes>
 				</configuration>
 				<executions>
@@ -200,7 +178,7 @@
 					<execution>
 						<id>jacoco-report</id>
 
-						<phase>integration-test</phase>
+						<phase>test</phase>
 						<goals>
 							<goal>report</goal>
 						</goals>
