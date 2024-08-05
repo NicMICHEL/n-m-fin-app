@@ -2,15 +2,12 @@ package com.pcs.service;
 
 import com.pcs.model.BidList;
 import com.pcs.repository.BidListRepository;
-import com.pcs.web.dto.BidListDTO;
-import com.pcs.web.mapper.BidListMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,9 +16,6 @@ public class BidListService {
 
     @Autowired
     private BidListRepository bidListRepository;
-    @Autowired
-    private BidListMapper bidListMapper;
-
 
     private static final Logger logger = LogManager.getLogger(BidListService.class);
 
@@ -64,15 +58,6 @@ public class BidListService {
             logger.error("Unable to find and delete bidList corresponding to id {}", id);
             throw new IllegalArgumentException("Invalid bidList id");
         }
-    }
-
-    public List<BidListDTO> getBidListDTOs() {
-        List<BidList> bidLists = getBidLists();
-        List<BidListDTO> bidListDTOS = new ArrayList<>();
-        bidLists.forEach(bidList -> {
-            bidListDTOS.add(bidListMapper.toBidListDTO(bidList));
-        });
-        return bidListDTOS;
     }
 
 }

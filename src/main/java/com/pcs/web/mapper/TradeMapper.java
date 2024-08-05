@@ -6,6 +6,9 @@ import com.pcs.web.dto.TradeDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 public class TradeMapper {
 
@@ -35,6 +38,15 @@ public class TradeMapper {
             trade.setBuyQuantity(Double.parseDouble(tradeDTO.getBuyQuantity()));
             return trade;
         }
+    }
+
+    public List<TradeDTO> getTradeDTOs() {
+        List<Trade> trades = tradeService.getTrades();
+        List<TradeDTO> tradeDTOs = new ArrayList<>();
+        trades.forEach(trade -> {
+            tradeDTOs.add(toTradeDTO(trade));
+        });
+        return tradeDTOs;
     }
 
 }

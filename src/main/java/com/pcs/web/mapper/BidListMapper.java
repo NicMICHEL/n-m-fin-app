@@ -6,6 +6,9 @@ import com.pcs.web.dto.BidListDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 public class BidListMapper {
 
@@ -37,6 +40,15 @@ public class BidListMapper {
             bidList.setBidQuantity(Double.parseDouble(bidListDTO.getBidQuantity()));
             return bidList;
         }
+    }
+
+    public List<BidListDTO> getBidListDTOs() {
+        List<BidList> bidLists = bidListService.getBidLists();
+        List<BidListDTO> bidListDTOS = new ArrayList<>();
+        bidLists.forEach(bidList -> {
+            bidListDTOS.add(toBidListDTO(bidList));
+        });
+        return bidListDTOS;
     }
 
 }

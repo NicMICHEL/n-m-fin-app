@@ -49,7 +49,7 @@ public class RatingControllerTest {
         List<RatingDTO> expectedRatingDTOs = new ArrayList<>();
         expectedRatingDTOs.add(ratingDTO1);
         expectedRatingDTOs.add(ratingDTO2);
-        when(ratingService.getRatingDTOs()).thenReturn(expectedRatingDTOs);
+        when(ratingMapper.getRatingDTOs()).thenReturn(expectedRatingDTOs);
         //when
         mockMvc.perform(get("/rating/list"))
                 //then

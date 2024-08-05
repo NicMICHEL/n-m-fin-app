@@ -23,7 +23,7 @@ public class RatingController {
 
     @RequestMapping("/rating/list")
     public String home(Model model) {
-        model.addAttribute("ratingDTOs", ratingService.getRatingDTOs());
+        model.addAttribute("ratingDTOs", ratingMapper.getRatingDTOs());
         return "rating/list";
     }
 

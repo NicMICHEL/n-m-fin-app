@@ -53,7 +53,7 @@ public class UserControllerTest {
         List<UserDTO> expectedUserDTOs = new ArrayList<>();
         expectedUserDTOs.add(userDTO1);
         expectedUserDTOs.add(userDTO2);
-        when(userService.getUserDTOs()).thenReturn(expectedUserDTOs);
+        when(userMapper.getUserDTOs()).thenReturn(expectedUserDTOs);
         //when
         mockMvc.perform(get("/user/list"))
                 //then

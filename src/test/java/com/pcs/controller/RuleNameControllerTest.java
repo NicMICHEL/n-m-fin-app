@@ -49,7 +49,7 @@ public class RuleNameControllerTest {
         List<RuleNameDTO> expectedRuleNameDTOs = new ArrayList<>();
         expectedRuleNameDTOs.add(ruleNameDTO1);
         expectedRuleNameDTOs.add(ruleNameDTO2);
-        when(ruleNameService.getRuleNameDTOs()).thenReturn(expectedRuleNameDTOs);
+        when(ruleNameMapper.getRuleNameDTOs()).thenReturn(expectedRuleNameDTOs);
         //when
         mockMvc.perform(get("/ruleName/list"))
                 //then

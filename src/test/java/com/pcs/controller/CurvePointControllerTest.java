@@ -46,7 +46,7 @@ public class CurvePointControllerTest {
         List<CurvePointDTO> expectedCurvePointDTOs = new ArrayList<>();
         expectedCurvePointDTOs.add(curvePointDTO1);
         expectedCurvePointDTOs.add(curvePointDTO2);
-        when(curvePointService.getCurvePointDTOs()).thenReturn(expectedCurvePointDTOs);
+        when(curvePointMapper.getCurvePointDTOs()).thenReturn(expectedCurvePointDTOs);
         //when
         mockMvc.perform(get("/curvePoint/list"))
                 //then

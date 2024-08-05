@@ -28,7 +28,7 @@ public class UserController {
     @RequestMapping("/user/list")
     public String home(Model model)
     {
-        model.addAttribute("userDTOs", userService.getUserDTOs());
+        model.addAttribute("userDTOs", userMapper.getUserDTOs());
         return "user/list";
     }
 

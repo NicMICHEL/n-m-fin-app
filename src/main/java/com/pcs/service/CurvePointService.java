@@ -2,15 +2,12 @@ package com.pcs.service;
 
 import com.pcs.model.CurvePoint;
 import com.pcs.repository.CurvePointRepository;
-import com.pcs.web.dto.CurvePointDTO;
-import com.pcs.web.mapper.CurvePointMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,8 +16,6 @@ public class CurvePointService {
 
     @Autowired
     private CurvePointRepository curvePointRepository;
-    @Autowired
-    private CurvePointMapper curvePointMapper;
 
     private static final Logger logger = LogManager.getLogger(CurvePointService.class);
 
@@ -62,15 +57,6 @@ public class CurvePointService {
             logger.error("Unable to find and delete curvePoint corresponding to id {}", id);
             throw new IllegalArgumentException("Invalid curvePoint id");
         }
-    }
-
-    public List<CurvePointDTO> getCurvePointDTOs() {
-        List<CurvePoint> curvePoints = getCurvePoints();
-        List<CurvePointDTO> curvePointDTOs = new ArrayList<>();
-        curvePoints.forEach(curvePoint -> {
-            curvePointDTOs.add(curvePointMapper.toCurvePointDTO(curvePoint));
-        });
-        return curvePointDTOs;
     }
 
 }

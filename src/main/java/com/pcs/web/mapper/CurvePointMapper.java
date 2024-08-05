@@ -6,6 +6,9 @@ import com.pcs.web.dto.CurvePointDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Component
 public class CurvePointMapper {
 
@@ -36,6 +39,15 @@ public class CurvePointMapper {
             curvePoint.setValue(Double.parseDouble(curvePointDTO.getValue()));
             return curvePoint;
         }
+    }
+
+    public List<CurvePointDTO> getCurvePointDTOs() {
+        List<CurvePoint> curvePoints = curvePointService.getCurvePoints();
+        List<CurvePointDTO> curvePointDTOs = new ArrayList<>();
+        curvePoints.forEach(curvePoint -> {
+            curvePointDTOs.add(toCurvePointDTO(curvePoint));
+        });
+        return curvePointDTOs;
     }
 
 }

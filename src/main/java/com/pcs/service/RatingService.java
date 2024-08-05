@@ -2,7 +2,6 @@ package com.pcs.service;
 
 import com.pcs.model.Rating;
 import com.pcs.repository.RatingRepository;
-import com.pcs.web.dto.RatingDTO;
 import com.pcs.web.mapper.RatingMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -10,7 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,8 +17,6 @@ public class RatingService {
 
     @Autowired
     private RatingRepository ratingRepository;
-    @Autowired
-    private RatingMapper ratingMapper;
 
     private static final Logger logger = LogManager.getLogger(RatingService.class);
 
@@ -63,15 +59,6 @@ public class RatingService {
             logger.error("Unable to find and delete Rating corresponding to id {}", id);
             throw new IllegalArgumentException("Invalid rating id");
         }
-    }
-
-    public List<RatingDTO> getRatingDTOs() {
-        List<Rating> ratings = getRatings();
-        List<RatingDTO> ratingDTOs = new ArrayList<>();
-        ratings.forEach(rating -> {
-            ratingDTOs.add(ratingMapper.toRatingDTO(rating));
-        });
-        return ratingDTOs;
     }
 
 }

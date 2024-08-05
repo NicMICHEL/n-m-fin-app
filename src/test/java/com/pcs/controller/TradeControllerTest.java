@@ -49,7 +49,7 @@ public class TradeControllerTest {
         List<TradeDTO> expectedTradeDTOs = new ArrayList<>();
         expectedTradeDTOs.add(tradeDTO1);
         expectedTradeDTOs.add(tradeDTO2);
-        when(tradeService.getTradeDTOs()).thenReturn(expectedTradeDTOs);
+        when(tradeMapper.getTradeDTOs()).thenReturn(expectedTradeDTOs);
         //when
         mockMvc.perform(get("/trade/list"))
                 //then
@@ -74,7 +74,6 @@ public class TradeControllerTest {
                 .andExpect(model().attribute("tradeDTO", expectedTradeDTO))
                 .andExpect(status().is2xxSuccessful());
     }
-
 
     @Test
     @WithMockUser(username = "user")

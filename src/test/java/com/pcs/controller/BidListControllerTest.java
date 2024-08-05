@@ -46,7 +46,7 @@ public class BidListControllerTest {
         List<BidListDTO> expectedBidListDTOs = new ArrayList<>();
         expectedBidListDTOs.add(bidListDTO1);
         expectedBidListDTOs.add(bidListDTO2);
-        when(bidListService.getBidListDTOs()).thenReturn(expectedBidListDTOs);
+        when(bidListMapper.getBidListDTOs()).thenReturn(expectedBidListDTOs);
         //when
         mockMvc.perform(get("/bidList/list"))
                 //then

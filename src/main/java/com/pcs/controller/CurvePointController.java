@@ -26,7 +26,7 @@ public class CurvePointController {
 
     @RequestMapping("/curvePoint/list")
     public String home(Model model) {
-        model.addAttribute("curvePointDTOs", curvePointService.getCurvePointDTOs());
+        model.addAttribute("curvePointDTOs", curvePointMapper.getCurvePointDTOs());
         return "curvePoint/list";
     }
 
