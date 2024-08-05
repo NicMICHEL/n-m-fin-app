@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 
 @Controller
@@ -29,7 +27,7 @@ public class TradeController {
 
     @RequestMapping("/trade/list")
     public String home(Model model) {
-        model.addAttribute("tradeDTOs", getTradeDTOs());
+        model.addAttribute("tradeDTOs", tradeService.getTradeDTOs());
         return "trade/list";
     }
 
@@ -74,15 +72,6 @@ public class TradeController {
     public String deleteTrade(@PathVariable("id") Integer id, Model model) throws IllegalArgumentException {
         tradeService.deleteById(id);
         return "redirect:/trade/list";
-    }
-
-    public List<TradeDTO> getTradeDTOs() {
-        List<Trade> trades = tradeService.getTrades();
-        List<TradeDTO> tradeDTOs = new ArrayList<>();
-        trades.forEach(trade -> {
-            tradeDTOs.add(tradeMapper.toTradeDTO(trade));
-        });
-        return tradeDTOs;
     }
 
     @ExceptionHandler

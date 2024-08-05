@@ -14,8 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+
 
 @Controller
 public class CurvePointController {
@@ -27,7 +26,7 @@ public class CurvePointController {
 
     @RequestMapping("/curvePoint/list")
     public String home(Model model) {
-        model.addAttribute("curvePointDTOs", getCurvePointDTOs());
+        model.addAttribute("curvePointDTOs", curvePointService.getCurvePointDTOs());
         return "curvePoint/list";
     }
 
@@ -70,15 +69,6 @@ public class CurvePointController {
     public String deleteCurvePoint(@PathVariable("id") Integer id, Model model) throws IllegalArgumentException {
         curvePointService.deleteById(id);
         return "redirect:/curvePoint/list";
-    }
-
-    public List<CurvePointDTO> getCurvePointDTOs() {
-        List<CurvePoint> curvePoints = curvePointService.getCurvePoints();
-        List<CurvePointDTO> curvePointDTOs = new ArrayList<>();
-        curvePoints.forEach(curvePoint -> {
-            curvePointDTOs.add(curvePointMapper.toCurvePointDTO(curvePoint));
-        });
-        return curvePointDTOs;
     }
 
     @ExceptionHandler

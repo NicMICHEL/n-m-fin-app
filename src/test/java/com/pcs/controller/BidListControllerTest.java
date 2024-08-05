@@ -17,7 +17,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -30,8 +29,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(BidListController.class)
 public class BidListControllerTest {
 
-    @Autowired
-    private BidListController bidListController;
     @MockBean
     private BidListService bidListService;
     @MockBean
@@ -44,19 +41,12 @@ public class BidListControllerTest {
     @WithMockUser(username = "user")
     public void should_return_to_bidList_List_page_successfully() throws Exception {
         //given
-        BidList bidList1 = new BidList(1, "account_1", "type_1", 1.1);
-        BidList bidList2 = new BidList(2, "account_2", "type_2", 2.2);
-        List<BidList> bidLists = new ArrayList<>();
-        bidLists.add(bidList1);
-        bidLists.add(bidList2);
         BidListDTO bidListDTO1 = new BidListDTO(1, "account_1", "type_1", "1.1");
         BidListDTO bidListDTO2 = new BidListDTO(2, "account_2", "type_2", "2.2");
         List<BidListDTO> expectedBidListDTOs = new ArrayList<>();
         expectedBidListDTOs.add(bidListDTO1);
         expectedBidListDTOs.add(bidListDTO2);
-        when(bidListService.getBidLists()).thenReturn(bidLists);
-        when(bidListMapper.toBidListDTO(bidList1)).thenReturn(bidListDTO1);
-        when(bidListMapper.toBidListDTO(bidList2)).thenReturn(bidListDTO2);
+        when(bidListService.getBidListDTOs()).thenReturn(expectedBidListDTOs);
         //when
         mockMvc.perform(get("/bidList/list"))
                 //then
@@ -160,28 +150,6 @@ public class BidListControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/bidList/list"));
         verify(bidListService).deleteById(1);
-    }
-
-    @Test
-    public void should_get_bidListDTOs_successfully() throws Exception {
-        //given
-        BidList bidList1 = new BidList(1, "account_1", "type_1", 1.1);
-        BidList bidList2 = new BidList(2, "account_2", "type_2", 2.2);
-        List<BidList> bidLists = new ArrayList<>();
-        bidLists.add(bidList1);
-        bidLists.add(bidList2);
-        BidListDTO bidListDTO1 = new BidListDTO(1, "account_1", "type_1", "1.1");
-        BidListDTO bidListDTO2 = new BidListDTO(2, "account_2", "type_2", "2.2");
-        List<BidListDTO> expectedBidListDTOs = new ArrayList<>();
-        expectedBidListDTOs.add(bidListDTO1);
-        expectedBidListDTOs.add(bidListDTO2);
-        when(bidListService.getBidLists()).thenReturn(bidLists);
-        when(bidListMapper.toBidListDTO(bidList1)).thenReturn(bidListDTO1);
-        when(bidListMapper.toBidListDTO(bidList2)).thenReturn(bidListDTO2);
-        //when
-        List<BidListDTO> actualBidListDTOs = bidListController.getBidListDTOs();
-        //then
-        assertEquals(expectedBidListDTOs, actualBidListDTOs);
     }
 
 }

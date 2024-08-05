@@ -2,12 +2,16 @@ package com.pcs.service;
 
 import com.pcs.model.BidList;
 import com.pcs.repository.BidListRepository;
+import com.pcs.web.dto.BidListDTO;
+import com.pcs.web.mapper.BidListMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -20,6 +24,8 @@ public class BidListServiceTest {
 
     @Mock
     private BidListRepository bidListRepository;
+    @Mock
+    private BidListMapper bidListMapper;
     @InjectMocks
     private BidListService bidListService;
 
@@ -62,6 +68,28 @@ public class BidListServiceTest {
                     bidListService.deleteById(anyInt());
                 }, "IllegalArgumentException was expected");
         assertEquals("Invalid bidList id", thrown.getMessage());
+    }
+
+    @Test
+    public void should_get_bidListDTOs_successfully() throws Exception {
+        //given
+        BidList bidList1 = new BidList(1, "account_1", "type_1", 1.1);
+        BidList bidList2 = new BidList(2, "account_2", "type_2", 2.2);
+        List<BidList> bidLists = new ArrayList<>();
+        bidLists.add(bidList1);
+        bidLists.add(bidList2);
+        BidListDTO bidListDTO1 = new BidListDTO(1, "account_1", "type_1", "1.1");
+        BidListDTO bidListDTO2 = new BidListDTO(2, "account_2", "type_2", "2.2");
+        List<BidListDTO> expectedBidListDTOs = new ArrayList<>();
+        expectedBidListDTOs.add(bidListDTO1);
+        expectedBidListDTOs.add(bidListDTO2);
+        when(bidListService.getBidLists()).thenReturn(bidLists);
+        when(bidListMapper.toBidListDTO(bidList1)).thenReturn(bidListDTO1);
+        when(bidListMapper.toBidListDTO(bidList2)).thenReturn(bidListDTO2);
+        //when
+        List<BidListDTO> actualBidListDTOs = bidListService.getBidListDTOs();
+        //then
+        assertEquals(expectedBidListDTOs, actualBidListDTOs);
     }
 
 }

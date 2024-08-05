@@ -2,12 +2,16 @@ package com.pcs.service;
 
 import com.pcs.model.Rating;
 import com.pcs.repository.RatingRepository;
+import com.pcs.web.dto.RatingDTO;
+import com.pcs.web.mapper.RatingMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -21,6 +25,8 @@ public class RatingServiceTest {
 
     @Mock
     private RatingRepository ratingRepository;
+    @Mock
+    private RatingMapper ratingMapper;
     @InjectMocks
     private RatingService ratingService;
 
@@ -63,6 +69,32 @@ public class RatingServiceTest {
                     ratingService.deleteById(anyInt());
                 }, "IllegalArgumentException was expected");
         assertEquals("Invalid rating id", thrown.getMessage());
+    }
+
+    @Test
+    public void should_get_ratingDTOs_successfully() throws Exception {
+        //given
+        Rating rating1 = new Rating(1, "MoodysRating_1", "SandPRating_1",
+                "FitchRating_1", 11);
+        Rating rating2 = new Rating(2, "MoodysRating_2", "SandPRating_2",
+                "FitchRating_2", 22);
+        List<Rating> ratings = new ArrayList<>();
+        ratings.add(rating1);
+        ratings.add(rating2);
+        RatingDTO ratingDTO1 = new RatingDTO(1, "MoodysRating_1", "SandPRating_1",
+                "FitchRating_1", "11");
+        RatingDTO ratingDTO2 = new RatingDTO(2, "MoodysRating_2", "SandPRating_2",
+                "FitchRating_2", "22");
+        List<RatingDTO> expectedRatingDTOs = new ArrayList<>();
+        expectedRatingDTOs.add(ratingDTO1);
+        expectedRatingDTOs.add(ratingDTO2);
+        when(ratingService.getRatings()).thenReturn(ratings);
+        when(ratingMapper.toRatingDTO(rating1)).thenReturn(ratingDTO1);
+        when(ratingMapper.toRatingDTO(rating2)).thenReturn(ratingDTO2);
+        //when
+        List<RatingDTO> actualRatingDTOs = ratingService.getRatingDTOs();
+        //then
+        assertEquals(expectedRatingDTOs, actualRatingDTOs);
     }
 
 }

@@ -17,7 +17,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -30,8 +29,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(CurvePointController.class)
 public class CurvePointControllerTest {
 
-    @Autowired
-    private CurvePointController curvePointController;
     @MockBean
     private CurvePointService curvePointService;
     @MockBean
@@ -44,19 +41,12 @@ public class CurvePointControllerTest {
     @WithMockUser(username = "user")
     public void should_return_to_curvePointList_page_successfully() throws Exception {
         //given
-        CurvePoint curvePoint1 = new CurvePoint(1, 2, 2.2, 3.3);
-        CurvePoint curvePoint2 = new CurvePoint(2, 3, 3.3, 4.4);
-        List<CurvePoint> curvePoints = new ArrayList<>();
-        curvePoints.add(curvePoint1);
-        curvePoints.add(curvePoint2);
         CurvePointDTO curvePointDTO1 = new CurvePointDTO(1, "2", "2.2", "3.3");
         CurvePointDTO curvePointDTO2 = new CurvePointDTO(2, "3", "3.3", "4.4");
         List<CurvePointDTO> expectedCurvePointDTOs = new ArrayList<>();
         expectedCurvePointDTOs.add(curvePointDTO1);
         expectedCurvePointDTOs.add(curvePointDTO2);
-        when(curvePointService.getCurvePoints()).thenReturn(curvePoints);
-        when(curvePointMapper.toCurvePointDTO(curvePoint1)).thenReturn(curvePointDTO1);
-        when(curvePointMapper.toCurvePointDTO(curvePoint2)).thenReturn(curvePointDTO2);
+        when(curvePointService.getCurvePointDTOs()).thenReturn(expectedCurvePointDTOs);
         //when
         mockMvc.perform(get("/curvePoint/list"))
                 //then
@@ -159,28 +149,6 @@ public class CurvePointControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/curvePoint/list"));
         verify(curvePointService).deleteById(1);
-    }
-
-    @Test
-    public void should_get_curvePointDTOs_successfully() throws Exception {
-        //given
-        CurvePoint curvePoint1 = new CurvePoint(1, 2, 2.2, 3.3);
-        CurvePoint curvePoint2 = new CurvePoint(2, 3, 3.3, 4.4);
-        List<CurvePoint> curvePoints = new ArrayList<>();
-        curvePoints.add(curvePoint1);
-        curvePoints.add(curvePoint2);
-        CurvePointDTO curvePointDTO1 = new CurvePointDTO(1, "2", "2.2", "3.3");
-        CurvePointDTO curvePointDTO2 = new CurvePointDTO(2, "3", "3.3", "4.4");
-        List<CurvePointDTO> expectedCurvePointDTOs = new ArrayList<>();
-        expectedCurvePointDTOs.add(curvePointDTO1);
-        expectedCurvePointDTOs.add(curvePointDTO2);
-        when(curvePointService.getCurvePoints()).thenReturn(curvePoints);
-        when(curvePointMapper.toCurvePointDTO(curvePoint1)).thenReturn(curvePointDTO1);
-        when(curvePointMapper.toCurvePointDTO(curvePoint2)).thenReturn(curvePointDTO2);
-        //when
-        List<CurvePointDTO> actualCurvePointDTOs = curvePointController.getCurvePointDTOs();
-        //then
-        assertEquals(expectedCurvePointDTOs, actualCurvePointDTOs);
     }
 
 }

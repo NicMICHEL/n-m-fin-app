@@ -32,8 +32,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(TradeController.class)
 public class TradeControllerTest {
 
-    @Autowired
-    private TradeController tradeController;
     @MockBean
     private TradeService tradeService;
     @MockBean
@@ -46,19 +44,12 @@ public class TradeControllerTest {
     @WithMockUser(username = "user")
     public void should_return_to_trade_List_page_successfully() throws Exception {
         //given
-        Trade trade1 = new Trade(1, "account_1", "type_1", 1.1);
-        Trade trade2 = new Trade(2, "account_2", "type_2", 2.2);
-        List<Trade> trades = new ArrayList<>();
-        trades.add(trade1);
-        trades.add(trade2);
         TradeDTO tradeDTO1 = new TradeDTO(1, "account_1", "type_1", "1.1");
         TradeDTO tradeDTO2 = new TradeDTO(2, "account_2", "type_2", "2.2");
         List<TradeDTO> expectedTradeDTOs = new ArrayList<>();
         expectedTradeDTOs.add(tradeDTO1);
         expectedTradeDTOs.add(tradeDTO2);
-        when(tradeService.getTrades()).thenReturn(trades);
-        when(tradeMapper.toTradeDTO(trade1)).thenReturn(tradeDTO1);
-        when(tradeMapper.toTradeDTO(trade2)).thenReturn(tradeDTO2);
+        when(tradeService.getTradeDTOs()).thenReturn(expectedTradeDTOs);
         //when
         mockMvc.perform(get("/trade/list"))
                 //then
@@ -163,28 +154,6 @@ public class TradeControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/trade/list"));
         verify(tradeService).deleteById(1);
-    }
-
-    @Test
-    public void should_get_tradeDTOs_successfully() throws Exception {
-        //given
-        Trade trade1 = new Trade(1, "account_1", "type_1", 1.1);
-        Trade trade2 = new Trade(2, "account_2", "type_2", 2.2);
-        List<Trade> trades = new ArrayList<>();
-        trades.add(trade1);
-        trades.add(trade2);
-        TradeDTO tradeDTO1 = new TradeDTO(1, "account_1", "type_1", "1.1");
-        TradeDTO tradeDTO2 = new TradeDTO(2, "account_2", "type_2", "2.2");
-        List<TradeDTO> expectedTradeDTOs = new ArrayList<>();
-        expectedTradeDTOs.add(tradeDTO1);
-        expectedTradeDTOs.add(tradeDTO2);
-        when(tradeService.getTrades()).thenReturn(trades);
-        when(tradeMapper.toTradeDTO(trade1)).thenReturn(tradeDTO1);
-        when(tradeMapper.toTradeDTO(trade2)).thenReturn(tradeDTO2);
-        //when
-        List<TradeDTO> actualTradeDTOs = tradeController.getTradeDTOs();
-        //then
-        assertEquals(expectedTradeDTOs, actualTradeDTOs);
     }
 
 }

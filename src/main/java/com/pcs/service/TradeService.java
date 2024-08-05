@@ -2,12 +2,15 @@ package com.pcs.service;
 
 import com.pcs.model.Trade;
 import com.pcs.repository.TradeRepository;
+import com.pcs.web.dto.TradeDTO;
+import com.pcs.web.mapper.TradeMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +19,8 @@ public class TradeService {
 
     @Autowired
     private TradeRepository tradeRepository;
+    @Autowired
+    private TradeMapper tradeMapper;
 
     private static final Logger logger = LogManager.getLogger(TradeService.class);
 
@@ -58,6 +63,15 @@ public class TradeService {
             logger.error("Unable to find and delete trade corresponding to id {}", id);
             throw new IllegalArgumentException("Invalid trade id");
         }
+    }
+
+    public List<TradeDTO> getTradeDTOs() {
+        List<Trade> trades = getTrades();
+        List<TradeDTO> tradeDTOs = new ArrayList<>();
+        trades.forEach(trade -> {
+            tradeDTOs.add(tradeMapper.toTradeDTO(trade));
+        });
+        return tradeDTOs;
     }
 
 }

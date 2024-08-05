@@ -12,9 +12,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-
 
 @Controller
 public class RatingController {
@@ -26,7 +23,7 @@ public class RatingController {
 
     @RequestMapping("/rating/list")
     public String home(Model model) {
-        model.addAttribute("ratingDTOs", getRatingDTOs());
+        model.addAttribute("ratingDTOs", ratingService.getRatingDTOs());
         return "rating/list";
     }
 
@@ -68,15 +65,6 @@ public class RatingController {
     public String deleteRating(@PathVariable("id") Integer id, Model model) throws IllegalArgumentException {
         ratingService.deleteById(id);
         return "redirect:/rating/list";
-    }
-
-    public List<RatingDTO> getRatingDTOs() {
-        List<Rating> ratings = ratingService.getRatings();
-        List<RatingDTO> ratingDTOs = new ArrayList<>();
-        ratings.forEach(rating -> {
-            ratingDTOs.add(ratingMapper.toRatingDTO(rating));
-        });
-        return ratingDTOs;
     }
 
     @ExceptionHandler

@@ -14,7 +14,7 @@
 	</div>
 
 	<div class="row">
-		<form action="#" th:action="@{/user/validate}" th:object="${user}" method="post" class="form-horizontal" style="width: 100%">
+		<form action="#" th:action="@{/user/validate}" th:object="${userDTO}" method="post" class="form-horizontal" style="width: 100%">
 			<div class="form-group">
 				<label for="fullname" class="col-sm-2 control-label">Full Name</label>
 				<div class="col-sm-10">
@@ -53,8 +53,15 @@
 				</div>
 			</div>
 
+			<div th:if="${#fields.hasGlobalErrors()}">
+				<p th:each="err : ${#fields.globalErrors() }" th:text="${err}" class="error" />
+			</div>
+
 		</form>
 	</div>
+
+
+
 
 </div>
 </body>

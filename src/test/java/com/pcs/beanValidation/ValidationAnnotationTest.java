@@ -1,9 +1,6 @@
 package com.pcs.beanValidation;
 
-import com.pcs.web.dto.BidListDTO;
-import com.pcs.web.dto.CurvePointDTO;
-import com.pcs.web.dto.RatingDTO;
-import com.pcs.web.dto.TradeDTO;
+import com.pcs.web.dto.*;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Validation;
 import jakarta.validation.Validator;
@@ -130,6 +127,70 @@ public class ValidationAnnotationTest {
                         "SandPRating is mandatory",
                         "FitchRating is mandatory",
                         "OrderNumber must be an integer");
+    }
+
+    @Test
+    public void when_ruleName_values_are_valid_then_validation_succeeds() {
+        //given
+        RuleNameDTO ruleNameDTO = new RuleNameDTO(1, "name_1", "description_1", "json_1",
+                "template_1", "sqlStr_1", "sqlPart_1");
+        //when
+        Set<ConstraintViolation<RuleNameDTO>> violations = validator.validate(ruleNameDTO);
+        //then
+        assertTrue(violations.isEmpty());
+    }
+
+    @Test
+    public void when_ruleName_values_are_invalid_then_validation_fails() {
+        //given
+        RuleNameDTO ruleNameDTO = new RuleNameDTO(1, "", "", "",
+                "", "", "");
+        //when
+        Set<ConstraintViolation<RuleNameDTO>> violations = validator.validate(ruleNameDTO);
+        //then
+        assertFalse(violations.isEmpty());
+        assertThat(violations).hasSize(6);
+        assertThat(violations).extracting(ConstraintViolation::getMessage)
+                .containsExactlyInAnyOrder(
+                        "Name is mandatory",
+                        "Description is mandatory",
+                        "json is mandatory",
+                        "Template is mandatory",
+                        "SqlStr is mandatory",
+                        "SqlPart is mandatory");
+    }
+
+    @Test
+    public void when_user_values_are_valid_then_validation_succeeds() {
+        //given
+        UserDTO userDTO = new UserDTO(null, "username_1", "aA!1abcd", "fullname_1",
+                "admin");
+        //when
+        Set<ConstraintViolation<UserDTO>> violations = validator.validate(userDTO);
+        //then
+        assertTrue(violations.isEmpty());
+    }
+
+    @Test
+    public void when_user_values_are_invalid_then_validation_fails() {
+        //given
+        UserDTO userDTO = new UserDTO(null, "", "abcd", "","");
+        //when
+        Set<ConstraintViolation<UserDTO>> violations = validator.validate(userDTO);
+        //then
+        assertFalse(violations.isEmpty());
+        assertThat(violations).hasSize(4);
+        assertThat(violations).extracting(ConstraintViolation::getMessage)
+                .containsExactlyInAnyOrder(
+                        "Username is mandatory",
+                        "Password must contain "
+                                + "at least one lowercase letter(a - z),\n"
+                                + "at least one uppercase letter(A - Z),\n"
+                                + "at least one numeric value(0-9),\n"
+                                + "at least one special symbol(!@#$%^&*=+-_),\n"
+                                + "and total length should be greater than or equal to 8 and less or equal to 16.",
+                        "FullName is mandatory",
+                        "Role is mandatory");
     }
 
 }

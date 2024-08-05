@@ -17,7 +17,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -31,8 +30,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(RatingController.class)
 public class RatingControllerTest {
 
-    @Autowired
-    private RatingController ratingController;
     @MockBean
     private RatingService ratingService;
     @MockBean
@@ -45,13 +42,6 @@ public class RatingControllerTest {
     @WithMockUser(username = "user")
     public void should_return_to_rating_List_page_successfully() throws Exception {
         //given
-        Rating rating1 = new Rating(1, "MoodysRating_1", "SandPRating_1",
-                "FitchRating_1", 11);
-        Rating rating2 = new Rating(2, "MoodysRating_2", "SandPRating_2",
-                "FitchRating_2", 22);
-        List<Rating> ratings = new ArrayList<>();
-        ratings.add(rating1);
-        ratings.add(rating2);
         RatingDTO ratingDTO1 = new RatingDTO(1, "MoodysRating_1", "SandPRating_1",
                 "FitchRating_1", "11");
         RatingDTO ratingDTO2 = new RatingDTO(2, "MoodysRating_2", "SandPRating_2",
@@ -59,9 +49,7 @@ public class RatingControllerTest {
         List<RatingDTO> expectedRatingDTOs = new ArrayList<>();
         expectedRatingDTOs.add(ratingDTO1);
         expectedRatingDTOs.add(ratingDTO2);
-        when(ratingService.getRatings()).thenReturn(ratings);
-        when(ratingMapper.toRatingDTO(rating1)).thenReturn(ratingDTO1);
-        when(ratingMapper.toRatingDTO(rating2)).thenReturn(ratingDTO2);
+        when(ratingService.getRatingDTOs()).thenReturn(expectedRatingDTOs);
         //when
         mockMvc.perform(get("/rating/list"))
                 //then
@@ -170,32 +158,6 @@ public class RatingControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/rating/list"));
         verify(ratingService).deleteById(1);
-    }
-
-    @Test
-    public void should_get_ratingDTOs_successfully() throws Exception {
-        //given
-        Rating rating1 = new Rating(1, "MoodysRating_1", "SandPRating_1",
-                "FitchRating_1", 11);
-        Rating rating2 = new Rating(2, "MoodysRating_2", "SandPRating_2",
-                "FitchRating_2", 22);
-        List<Rating> ratings = new ArrayList<>();
-        ratings.add(rating1);
-        ratings.add(rating2);
-        RatingDTO ratingDTO1 = new RatingDTO(1, "MoodysRating_1", "SandPRating_1",
-                "FitchRating_1", "11");
-        RatingDTO ratingDTO2 = new RatingDTO(2, "MoodysRating_2", "SandPRating_2",
-                "FitchRating_2", "22");
-        List<RatingDTO> expectedRatingDTOs = new ArrayList<>();
-        expectedRatingDTOs.add(ratingDTO1);
-        expectedRatingDTOs.add(ratingDTO2);
-        when(ratingService.getRatings()).thenReturn(ratings);
-        when(ratingMapper.toRatingDTO(rating1)).thenReturn(ratingDTO1);
-        when(ratingMapper.toRatingDTO(rating2)).thenReturn(ratingDTO2);
-        //when
-        List<RatingDTO> actualRatingDTOs = ratingController.getRatingDTOs();
-        //then
-        assertEquals(expectedRatingDTOs, actualRatingDTOs);
     }
 
 }

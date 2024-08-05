@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 
 
 @Controller
@@ -29,7 +27,7 @@ public class BidListController {
 
     @RequestMapping("/bidList/list")
     public String home(Model model) {
-        model.addAttribute("bidListDTOs", getBidListDTOs());
+        model.addAttribute("bidListDTOs", bidListService.getBidListDTOs());
         return "bidList/list";
     }
 
@@ -73,15 +71,6 @@ public class BidListController {
     public String deleteBidList(@PathVariable("id") Integer id, Model model) throws IllegalArgumentException {
         bidListService.deleteById(id);
         return "redirect:/bidList/list";
-    }
-
-    public List<BidListDTO> getBidListDTOs() {
-        List<BidList> bidLists = bidListService.getBidLists();
-        List<BidListDTO> bidListDTOS = new ArrayList<>();
-        bidLists.forEach(bidList -> {
-            bidListDTOS.add(bidListMapper.toBidListDTO(bidList));
-        });
-        return bidListDTOS;
     }
 
     @ExceptionHandler
