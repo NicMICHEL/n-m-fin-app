@@ -8,13 +8,10 @@ import java.util.Objects;
 public class TradeDTO {
 
     private Integer tradeId;
-
     @NotBlank(message = "Account is mandatory")
     private String account;
-
     @NotBlank(message = "Type is mandatory")
     private String type;
-
     @NotBlank(message = "BuyQuantity is mandatory")
     @Pattern(regexp = "^[0-9]+(\\.[0-9]+)?$", message = "BuyQuantity must be a numeric value")
     private String buyQuantity;

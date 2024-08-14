@@ -1,5 +1,6 @@
 package com.pcs.controller;
 
+import com.pcs.configuration.ConnectedUser;
 import com.pcs.model.Trade;
 import com.pcs.service.TradeService;
 import com.pcs.web.dto.TradeDTO;
@@ -7,6 +8,7 @@ import com.pcs.web.mapper.TradeMapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,11 +25,15 @@ public class TradeController {
     private TradeService tradeService;
     @Autowired
     private TradeMapper tradeMapper;
+    @Autowired
+    private ConnectedUser connectedUser;
 
 
     @RequestMapping("/trade/list")
-    public String home(Model model) {
+    public String home(Model model, UsernamePasswordAuthenticationToken token) {
         model.addAttribute("tradeDTOs", tradeMapper.getTradeDTOs());
+        model.addAttribute("connectedUserName", connectedUser.getUsernamePasswordLoginInfo(token));
+        model.addAttribute("hasRoleAdmin", connectedUser.hasRole(token, "ROLE_ADMIN"));
         return "trade/list";
     }
 
@@ -63,7 +69,6 @@ public class TradeController {
             tradeService.update(trade);
             return "redirect:/trade/list";
         }
-        // maj à tradeDTO cf aussi  bidlist controll l 77
         model.addAttribute("tradeDTO", tradeDTO);
         return "trade/update";
     }

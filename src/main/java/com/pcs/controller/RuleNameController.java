@@ -1,5 +1,6 @@
 package com.pcs.controller;
 
+import com.pcs.configuration.ConnectedUser;
 import com.pcs.model.RuleName;
 import com.pcs.service.RuleNameService;
 import com.pcs.web.dto.RuleNameDTO;
@@ -7,6 +8,7 @@ import com.pcs.web.mapper.RuleNameMapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -19,11 +21,15 @@ public class RuleNameController {
     private RuleNameService ruleNameService;
     @Autowired
     private RuleNameMapper ruleNameMapper;
+    @Autowired
+    private ConnectedUser connectedUser;
 
 
     @RequestMapping("/ruleName/list")
-    public String home(Model model) {
+    public String home(Model model, UsernamePasswordAuthenticationToken token) {
         model.addAttribute("ruleNameDTOs", ruleNameMapper.getRuleNameDTOs());
+        model.addAttribute("connectedUserName", connectedUser.getUsernamePasswordLoginInfo(token));
+        model.addAttribute("hasRoleAdmin", connectedUser.hasRole(token, "ROLE_ADMIN"));
         return "ruleName/list";
     }
 
@@ -74,5 +80,5 @@ public class RuleNameController {
             (IllegalArgumentException illegalArgumentException) {
         return illegalArgumentException.getMessage();
     }
-}
 
+}

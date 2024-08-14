@@ -8,15 +8,12 @@
 </head>
 <body>
 <div class="container">
-
 	<div class="row">
 		<h2>Add New Curve Point</h2>
 	</div>
-
 	<div class="row">
-		<form action="#" th:action="@{/curvePoint/validate}" th:object="${curvePointDTO}" method="post" class="form-horizontal" style="width: 100%">
-
-			<!-- rajout div pour saisie curveId  -->
+		<form action="#" th:action="@{/curvePoint/validate}" th:object="${curvePointDTO}" method="post"
+			  class="form-horizontal" style="width: 100%">
 			<div class="form-group">
 				<label for="curveId" class="col-sm-2 control-label">CurvePointId</label>
 				<div class="col-sm-10">
@@ -24,7 +21,6 @@
 					<p class="text-danger" th:if="${#fields.hasErrors('curveId')}" th:errors="*{curveId}"></p>
 				</div>
 			</div>
-
 			<div class="form-group">
 				<label for="term" class="col-sm-2 control-label">Term</label>
 				<div class="col-sm-10">
@@ -39,7 +35,6 @@
 					<p class="text-danger" th:if="${#fields.hasErrors('value')}" th:errors="*{value}"></p>
 				</div>
 			</div>
-
 			<div class="form-group">
 				<div class="col-sm-12">
 					<a class="btn btn-danger btn-sm" href="/curvePoint/list">Cancel</a>
@@ -48,7 +43,6 @@
 			</div>
 		</form>
 	</div>
-
 </div>
 </body>
 </html>

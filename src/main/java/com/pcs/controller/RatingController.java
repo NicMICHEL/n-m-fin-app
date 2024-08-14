@@ -1,5 +1,6 @@
 package com.pcs.controller;
 
+import com.pcs.configuration.ConnectedUser;
 import com.pcs.model.Rating;
 import com.pcs.service.RatingService;
 import com.pcs.web.dto.RatingDTO;
@@ -7,6 +8,7 @@ import com.pcs.web.mapper.RatingMapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -20,10 +22,14 @@ public class RatingController {
     private RatingService ratingService;
     @Autowired
     private RatingMapper ratingMapper;
+    @Autowired
+    private ConnectedUser connectedUser;
 
     @RequestMapping("/rating/list")
-    public String home(Model model) {
+    public String home(Model model, UsernamePasswordAuthenticationToken token) {
         model.addAttribute("ratingDTOs", ratingMapper.getRatingDTOs());
+        model.addAttribute("connectedUserName", connectedUser.getUsernamePasswordLoginInfo(token));
+        model.addAttribute("hasRoleAdmin", connectedUser.hasRole(token, "ROLE_ADMIN"));
         return "rating/list";
     }
 

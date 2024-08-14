@@ -2,7 +2,6 @@ package com.pcs.service;
 
 import com.pcs.model.User;
 import com.pcs.repository.UserRepository;
-import com.pcs.web.mapper.UserMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -14,8 +13,8 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
-
 
 
 @ExtendWith(MockitoExtension.class)
@@ -23,8 +22,6 @@ public class UserServiceTest {
 
     @Mock
     private UserRepository userRepository;
-    @Mock
-    private UserMapper userMapper;
     @InjectMocks
     private UserService userService;
 
@@ -67,6 +64,19 @@ public class UserServiceTest {
                     userService.deleteById(anyInt());
                 }, "IllegalArgumentException was expected");
         assertEquals("Invalid user id", thrown.getMessage());
+    }
+
+    @Test
+    public void should_throw_an_exception_when_getting_user_corresponding_to_username_is_not_found() {
+        //given
+        Optional<User> emptyUser = Optional.empty();
+        when(userRepository.getUserByUsername(anyString())).thenReturn(emptyUser);
+        //when then
+        IllegalArgumentException thrown = assertThrows(IllegalArgumentException.class,
+                () -> {
+                    userService.getUserByUsername(anyString());
+                }, "IllegalArgumentException was expected");
+        assertEquals("Invalid user username", thrown.getMessage());
     }
 
 }

@@ -1,7 +1,6 @@
 package com.pcs.web.mapper;
 
 import com.pcs.model.BidList;
-import com.pcs.repository.BidListRepository;
 import com.pcs.service.BidListService;
 import com.pcs.web.dto.BidListDTO;
 import org.junit.jupiter.api.Test;
@@ -20,8 +19,6 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class BidListMapperTest {
 
-    @Mock
-    private BidListRepository bidListRepository;
     @InjectMocks
     private BidListMapper bidListMapper;
     @Mock

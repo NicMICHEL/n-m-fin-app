@@ -2,7 +2,6 @@ package com.pcs.service;
 
 import com.pcs.model.RuleName;
 import com.pcs.repository.RuleNameRepository;
-import com.pcs.web.mapper.RuleNameMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -21,8 +20,6 @@ public class RuleNameServiceTest {
 
     @Mock
     private RuleNameRepository ruleNameRepository;
-    @Mock
-    private RuleNameMapper ruleNameMapper;
     @InjectMocks
     private RuleNameService ruleNameService;
 

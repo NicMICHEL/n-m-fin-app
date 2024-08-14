@@ -2,7 +2,6 @@ package com.pcs.service;
 
 import com.pcs.model.Rating;
 import com.pcs.repository.RatingRepository;
-import com.pcs.web.mapper.RatingMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,8 +21,6 @@ public class RatingServiceTest {
 
     @Mock
     private RatingRepository ratingRepository;
-    @Mock
-    private RatingMapper ratingMapper;
     @InjectMocks
     private RatingService ratingService;
 

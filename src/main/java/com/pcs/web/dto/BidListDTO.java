@@ -8,13 +8,10 @@ import java.util.Objects;
 public class BidListDTO {
 
     private Integer bidListId;
-
     @NotBlank(message = "Account is mandatory")
     private String account;
-
     @NotBlank(message = "Type is mandatory")
     private String type;
-
     @NotBlank(message = "BidQuantity is mandatory")
     @Pattern(regexp = "^[0-9]+(\\.[0-9]+)?$", message = "BidQuantity must be a numeric value")
     private String bidQuantity;

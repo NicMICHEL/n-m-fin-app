@@ -174,7 +174,7 @@ public class ValidationAnnotationTest {
     @Test
     public void when_user_values_are_invalid_then_validation_fails() {
         //given
-        UserDTO userDTO = new UserDTO(null, "", "abcd", "","");
+        UserDTO userDTO = new UserDTO(null, "", "abcd", "", "");
         //when
         Set<ConstraintViolation<UserDTO>> violations = validator.validate(userDTO);
         //then

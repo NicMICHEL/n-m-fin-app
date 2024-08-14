@@ -56,7 +56,7 @@ public class UniqueUserNameValidationServiceTest {
         when(userService.getUsers()).thenReturn(allUsersList);
         String message = uniqueUserNameValidationService.validateUserDTOUserName(userDTOToValidate);
         verify(userService).getUsers();
-        assertEquals("The UserName ada is already in use. " +
+        assertEquals("UserName ada is already in use. " +
                 "Please choose another one.", message);
     }
 

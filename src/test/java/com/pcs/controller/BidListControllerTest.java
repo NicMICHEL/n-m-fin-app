@@ -1,6 +1,7 @@
 package com.pcs.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pcs.configuration.ConnectedUser;
 import com.pcs.model.BidList;
 import com.pcs.service.BidListService;
 import com.pcs.web.dto.BidListDTO;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -33,6 +35,8 @@ public class BidListControllerTest {
     private BidListService bidListService;
     @MockBean
     private BidListMapper bidListMapper;
+    @MockBean
+    private ConnectedUser connectedUser;
     @Autowired
     private MockMvc mockMvc;
 
@@ -47,6 +51,9 @@ public class BidListControllerTest {
         expectedBidListDTOs.add(bidListDTO1);
         expectedBidListDTOs.add(bidListDTO2);
         when(bidListMapper.getBidListDTOs()).thenReturn(expectedBidListDTOs);
+        when(connectedUser.getUsernamePasswordLoginInfo(any(UsernamePasswordAuthenticationToken.class)))
+                .thenReturn("albert");
+        when(connectedUser.hasRole(any(UsernamePasswordAuthenticationToken.class), anyString())).thenReturn(true);
         //when
         mockMvc.perform(get("/bidList/list"))
                 //then
@@ -54,6 +61,10 @@ public class BidListControllerTest {
                 .andExpect(view().name("bidList/list"))
                 .andExpect(model().attributeExists("bidListDTOs"))
                 .andExpect(model().attribute("bidListDTOs", expectedBidListDTOs))
+                .andExpect(model().attributeExists("connectedUserName"))
+                .andExpect(model().attribute("connectedUserName", "albert"))
+                .andExpect(model().attributeExists("hasRoleAdmin"))
+                .andExpect(model().attribute("hasRoleAdmin", true))
                 .andExpect(status().is2xxSuccessful());
     }
 
@@ -118,9 +129,9 @@ public class BidListControllerTest {
     @WithMockUser(username = "user")
     public void should_update_valid_bidList_successfully() throws Exception {
         //given
-        BidListDTO initialBidListDTO99 = new BidListDTO(99, "account_99", "type_99", "99.99");
+        BidListDTO initialBidListDTO99 = new BidListDTO(99, "account_99", "type_99",
+                "99.99");
         BidList bidList99 = new BidList(99, "account_9009", "type_9009", 9009.9009);
-        //BidListDTO bidListDTO99 = new BidListDTO(99, "account_9009", "type_9009", "9009.9009");
         when(bidListMapper.toBidList(any(BidListDTO.class))).thenReturn(bidList99);
         doNothing().when(bidListService).update(bidList99);
         ObjectMapper objectMapper = new ObjectMapper();

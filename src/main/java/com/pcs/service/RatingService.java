@@ -2,7 +2,6 @@ package com.pcs.service;
 
 import com.pcs.model.Rating;
 import com.pcs.repository.RatingRepository;
-import com.pcs.web.mapper.RatingMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

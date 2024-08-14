@@ -1,6 +1,7 @@
 package com.pcs.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pcs.configuration.ConnectedUser;
 import com.pcs.model.Rating;
 import com.pcs.service.RatingService;
 import com.pcs.web.dto.RatingDTO;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -34,6 +36,8 @@ public class RatingControllerTest {
     private RatingService ratingService;
     @MockBean
     private RatingMapper ratingMapper;
+    @MockBean
+    private ConnectedUser connectedUser;
     @Autowired
     private MockMvc mockMvc;
 
@@ -50,6 +54,9 @@ public class RatingControllerTest {
         expectedRatingDTOs.add(ratingDTO1);
         expectedRatingDTOs.add(ratingDTO2);
         when(ratingMapper.getRatingDTOs()).thenReturn(expectedRatingDTOs);
+        when(connectedUser.getUsernamePasswordLoginInfo(any(UsernamePasswordAuthenticationToken.class)))
+                .thenReturn("albert");
+        when(connectedUser.hasRole(any(UsernamePasswordAuthenticationToken.class), anyString())).thenReturn(true);
         //when
         mockMvc.perform(get("/rating/list"))
                 //then
@@ -57,6 +64,10 @@ public class RatingControllerTest {
                 .andExpect(view().name("rating/list"))
                 .andExpect(model().attributeExists("ratingDTOs"))
                 .andExpect(model().attribute("ratingDTOs", expectedRatingDTOs))
+                .andExpect(model().attributeExists("connectedUserName"))
+                .andExpect(model().attribute("connectedUserName", "albert"))
+                .andExpect(model().attributeExists("hasRoleAdmin"))
+                .andExpect(model().attribute("hasRoleAdmin", true))
                 .andExpect(status().is2xxSuccessful());
     }
 

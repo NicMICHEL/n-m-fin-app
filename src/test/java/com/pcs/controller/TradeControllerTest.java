@@ -1,6 +1,7 @@
 package com.pcs.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pcs.configuration.ConnectedUser;
 import com.pcs.model.Trade;
 import com.pcs.service.TradeService;
 import com.pcs.web.dto.TradeDTO;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -17,7 +19,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
@@ -36,6 +37,8 @@ public class TradeControllerTest {
     private TradeService tradeService;
     @MockBean
     private TradeMapper tradeMapper;
+    @MockBean
+    private ConnectedUser connectedUser;
     @Autowired
     private MockMvc mockMvc;
 
@@ -50,6 +53,9 @@ public class TradeControllerTest {
         expectedTradeDTOs.add(tradeDTO1);
         expectedTradeDTOs.add(tradeDTO2);
         when(tradeMapper.getTradeDTOs()).thenReturn(expectedTradeDTOs);
+        when(connectedUser.getUsernamePasswordLoginInfo(any(UsernamePasswordAuthenticationToken.class)))
+                .thenReturn("albert");
+        when(connectedUser.hasRole(any(UsernamePasswordAuthenticationToken.class), anyString())).thenReturn(true);
         //when
         mockMvc.perform(get("/trade/list"))
                 //then
@@ -57,6 +63,10 @@ public class TradeControllerTest {
                 .andExpect(view().name("trade/list"))
                 .andExpect(model().attributeExists("tradeDTOs"))
                 .andExpect(model().attribute("tradeDTOs", expectedTradeDTOs))
+                .andExpect(model().attributeExists("connectedUserName"))
+                .andExpect(model().attribute("connectedUserName", "albert"))
+                .andExpect(model().attributeExists("hasRoleAdmin"))
+                .andExpect(model().attribute("hasRoleAdmin", true))
                 .andExpect(status().is2xxSuccessful());
     }
 
@@ -123,7 +133,6 @@ public class TradeControllerTest {
         //given
         TradeDTO initialTradeDTO99 = new TradeDTO(99, "account_99", "type_99", "99.99");
         Trade trade99 = new Trade(99, "account_9009", "type_9009", 9009.9009);
-        //TradeDTO tradeDTO99 = new TradeDTO(99, "account_9009", "type_9009", "9009.9009");
         when(tradeMapper.toTrade(any(TradeDTO.class))).thenReturn(trade99);
         doNothing().when(tradeService).update(trade99);
         ObjectMapper objectMapper = new ObjectMapper();

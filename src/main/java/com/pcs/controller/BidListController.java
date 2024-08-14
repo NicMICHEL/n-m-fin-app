@@ -1,5 +1,6 @@
 package com.pcs.controller;
 
+import com.pcs.configuration.ConnectedUser;
 import com.pcs.model.BidList;
 import com.pcs.service.BidListService;
 import com.pcs.web.dto.BidListDTO;
@@ -7,6 +8,7 @@ import com.pcs.web.mapper.BidListMapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,11 +25,15 @@ public class BidListController {
     private BidListService bidListService;
     @Autowired
     private BidListMapper bidListMapper;
+    @Autowired
+    private ConnectedUser connectedUser;
 
 
     @RequestMapping("/bidList/list")
-    public String home(Model model) {
+    public String home(Model model, UsernamePasswordAuthenticationToken token) {
         model.addAttribute("bidListDTOs", bidListMapper.getBidListDTOs());
+        model.addAttribute("connectedUserName", connectedUser.getUsernamePasswordLoginInfo(token));
+        model.addAttribute("hasRoleAdmin", connectedUser.hasRole(token, "ROLE_ADMIN"));
         return "bidList/list";
     }
 
@@ -63,7 +69,7 @@ public class BidListController {
             bidListService.update(bidList);
             return "redirect:/bidList/list";
         }
-        model.addAttribute("BidListDTO", bidListDTO);
+        model.addAttribute("bidListDTO", bidListDTO);
         return "bidList/update";
     }
 

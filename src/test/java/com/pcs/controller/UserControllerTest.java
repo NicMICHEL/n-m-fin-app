@@ -1,6 +1,7 @@
 package com.pcs.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pcs.configuration.ConnectedUser;
 import com.pcs.model.User;
 import com.pcs.service.UniqueUserNameValidationService;
 import com.pcs.service.UserService;
@@ -11,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -20,7 +22,6 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -38,6 +39,8 @@ public class UserControllerTest {
     private UserMapper userMapper;
     @MockBean
     private UniqueUserNameValidationService uniqueUserNameValidationService;
+    @MockBean
+    private ConnectedUser connectedUser;
     @Autowired
     private MockMvc mockMvc;
 
@@ -46,21 +49,25 @@ public class UserControllerTest {
     @WithMockUser(username = "user")
     public void should_return_to_user_List_page_successfully() throws Exception {
         //given
-        UserDTO userDTO1 = new UserDTO(1, "username_1", "crypted_password_1","fullname_1",
-                "user");
-        UserDTO userDTO2 = new UserDTO(2, "username_2", "crypted_password_2","fullname_2",
-                "user");;
-        List<UserDTO> expectedUserDTOs = new ArrayList<>();
-        expectedUserDTOs.add(userDTO1);
-        expectedUserDTOs.add(userDTO2);
-        when(userMapper.getUserDTOs()).thenReturn(expectedUserDTOs);
+        UserDTO userDTO1 = new UserDTO(1, "username_1", "crypted_password_1",
+                "fullname_1", "user");
+        UserDTO userDTO2 = new UserDTO(2, "username_2", "crypted_password_2",
+                "fullname_2", "user");
+        List<UserDTO> expectedUserDTOS = new ArrayList<>();
+        expectedUserDTOS.add(userDTO1);
+        expectedUserDTOS.add(userDTO2);
+        when(userMapper.getUserDTOs()).thenReturn(expectedUserDTOS);
+        when(connectedUser.getUsernamePasswordLoginInfo(any(UsernamePasswordAuthenticationToken.class)))
+                .thenReturn("albert");
         //when
         mockMvc.perform(get("/user/list"))
                 //then
                 .andDo(print())
                 .andExpect(view().name("user/list"))
                 .andExpect(model().attributeExists("userDTOs"))
-                .andExpect(model().attribute("userDTOs", expectedUserDTOs))
+                .andExpect(model().attribute("userDTOs", expectedUserDTOS))
+                .andExpect(model().attributeExists("connectedUserName"))
+                .andExpect(model().attribute("connectedUserName", "albert"))
                 .andExpect(status().is2xxSuccessful());
     }
 
@@ -83,10 +90,10 @@ public class UserControllerTest {
     @WithMockUser(username = "user")
     public void should_save_valid_user_successfully() throws Exception {
         //given
-        UserDTO userDTO1 = new UserDTO(null, "username_1", "aA!test","fullname_1",
+        UserDTO userDTO1 = new UserDTO(null, "username_1", "aA!test", "fullname_1",
                 "user");
         User user1 = new User(null, "username_1",
-                "$2a$10$GA6erqr7ckBGs9ka1Nou/OfG/fpUrqv12E.0NC0cTVyx/kvgrE43C","fullname_1",
+                "$2a$10$GA6erqr7ckBGs9ka1Nou/OfG/fpUrqv12E.0NC0cTVyx/kvgrE43C", "fullname_1",
                 "user");
         when(uniqueUserNameValidationService.validateUserDTOUserName(any(UserDTO.class))).thenReturn("");
         when(userMapper.toUser(any(UserDTO.class))).thenReturn(user1);
@@ -111,7 +118,7 @@ public class UserControllerTest {
     @WithMockUser(username = "user")
     public void should_return_user_update_page_successfully() throws Exception {
         //given
-        User user99 = new User(99, "username_99", "crypted_password_99","fullname_99",
+        User user99 = new User(99, "username_99", "crypted_password_99", "fullname_99",
                 "user");
         UserDTO userDTO99 = new UserDTO(99, "username_99", "fullname_99", "user");
         when(userService.getById(99)).thenReturn(user99);
@@ -131,11 +138,13 @@ public class UserControllerTest {
     public void should_update_valid_user_successfully() throws Exception {
         //given
         UserDTO initialUserDTO99 = new UserDTO(99, "username_99", "fullname_99", "user");
-        User user99 = new User(99, "username_9009","crypted_password_9009" ,"fullname_99",
-                "user");
-        //UserDTO userDTO99 = new UserDTO(99, "account_9009", "type_9009", "9009.9009");
+        User initialUser99 = new User(99, "username_99", "crypted_password_99",
+                "fullname_99", "user");
+        User user99 = new User(99, "username_9009", "crypted_password_9009",
+                "fullname_99", "user");
         when(uniqueUserNameValidationService.validateUserDTOUserName(any(UserDTO.class))).thenReturn("");
         when(userMapper.toUser(any(UserDTO.class))).thenReturn(user99);
+        when(userService.getById(99)).thenReturn(initialUser99);
         doNothing().when(userService).update(user99);
         ObjectMapper objectMapper = new ObjectMapper();
         //when
@@ -164,6 +173,17 @@ public class UserControllerTest {
                 .andExpect(status().is3xxRedirection())
                 .andExpect(redirectedUrl("/user/list"));
         verify(userService).deleteById(1);
+    }
+
+    @Test
+    @WithMockUser(username = "user")
+    public void should_return_to_bidList_page_successfully() throws Exception {
+        //when
+        mockMvc.perform(get("/admin/home"))
+                //then
+                .andDo(print())
+                .andExpect(status().is3xxRedirection())
+                .andExpect(redirectedUrl("/bidList/list"));
     }
 
 }

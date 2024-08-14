@@ -1,6 +1,7 @@
 package com.pcs.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pcs.configuration.ConnectedUser;
 import com.pcs.model.RuleName;
 import com.pcs.service.RuleNameService;
 import com.pcs.web.dto.RuleNameDTO;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -34,6 +36,8 @@ public class RuleNameControllerTest {
     private RuleNameService ruleNameService;
     @MockBean
     private RuleNameMapper ruleNameMapper;
+    @MockBean
+    private ConnectedUser connectedUser;
     @Autowired
     private MockMvc mockMvc;
 
@@ -50,6 +54,9 @@ public class RuleNameControllerTest {
         expectedRuleNameDTOs.add(ruleNameDTO1);
         expectedRuleNameDTOs.add(ruleNameDTO2);
         when(ruleNameMapper.getRuleNameDTOs()).thenReturn(expectedRuleNameDTOs);
+        when(connectedUser.getUsernamePasswordLoginInfo(any(UsernamePasswordAuthenticationToken.class)))
+                .thenReturn("albert");
+        when(connectedUser.hasRole(any(UsernamePasswordAuthenticationToken.class), anyString())).thenReturn(true);
         //when
         mockMvc.perform(get("/ruleName/list"))
                 //then
@@ -57,6 +64,10 @@ public class RuleNameControllerTest {
                 .andExpect(view().name("ruleName/list"))
                 .andExpect(model().attributeExists("ruleNameDTOs"))
                 .andExpect(model().attribute("ruleNameDTOs", expectedRuleNameDTOs))
+                .andExpect(model().attributeExists("connectedUserName"))
+                .andExpect(model().attribute("connectedUserName", "albert"))
+                .andExpect(model().attributeExists("hasRoleAdmin"))
+                .andExpect(model().attribute("hasRoleAdmin", true))
                 .andExpect(status().is2xxSuccessful());
     }
 
@@ -127,8 +138,8 @@ public class RuleNameControllerTest {
     @WithMockUser(username = "user")
     public void should_update_valid_ruleName_successfully() throws Exception {
         //given
-        RuleNameDTO initialRuleNameDTO99 = new RuleNameDTO(99, "name_99", "description_99", "json_99",
-                "template_99", "sqlStr_99", "sqlPart_99");
+        RuleNameDTO initialRuleNameDTO99 = new RuleNameDTO(99, "name_99", "description_99",
+                "json_99","template_99", "sqlStr_99", "sqlPart_99");
         RuleName ruleName99 = new RuleName(99, "name_9009", "description_9009", "json_9009",
                 "template_9009", "sqlStr_9009", "sqlPart_9009");
         when(ruleNameMapper.toRuleName(any(RuleNameDTO.class))).thenReturn(ruleName99);

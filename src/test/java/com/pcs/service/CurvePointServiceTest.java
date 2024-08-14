@@ -2,7 +2,6 @@ package com.pcs.service;
 
 import com.pcs.model.CurvePoint;
 import com.pcs.repository.CurvePointRepository;
-import com.pcs.web.mapper.CurvePointMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,8 +21,6 @@ public class CurvePointServiceTest {
 
     @Mock
     private CurvePointRepository curvePointRepository;
-    @Mock
-    private CurvePointMapper curvePointMapper;
     @InjectMocks
     private CurvePointService curvePointService;
 

@@ -23,7 +23,6 @@ public class BidListService {
         return bidListRepository.findAll();
     }
 
-
     public BidList getById(Integer id) throws IllegalArgumentException {
         Optional<BidList> bidList = bidListRepository.findById(id);
         if (bidList.isPresent()) {

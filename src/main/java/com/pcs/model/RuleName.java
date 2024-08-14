@@ -24,7 +24,6 @@ public class RuleName {
     private String sqlPart;
 
 
-
     public RuleName() {
     }
 
@@ -102,4 +101,5 @@ public class RuleName {
     public void setSqlPart(String sqlPart) {
         this.sqlPart = sqlPart;
     }
+
 }

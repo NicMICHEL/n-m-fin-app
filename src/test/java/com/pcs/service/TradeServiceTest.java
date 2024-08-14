@@ -2,7 +2,6 @@ package com.pcs.service;
 
 import com.pcs.model.Trade;
 import com.pcs.repository.TradeRepository;
-import com.pcs.web.mapper.TradeMapper;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -22,8 +21,6 @@ public class TradeServiceTest {
 
     @Mock
     private TradeRepository tradeRepository;
-    @Mock
-    private TradeMapper tradeMapper;
     @InjectMocks
     private TradeService tradeService;
 

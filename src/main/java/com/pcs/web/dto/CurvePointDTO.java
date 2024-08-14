@@ -8,18 +8,16 @@ import java.util.Objects;
 public class CurvePointDTO {
 
     private Integer id;
-
     @NotBlank(message = "CurveId is mandatory")
     @Pattern(regexp = "^[0-9]+(\\[0-9]+)?$", message = "CurveId must be an integer")
     private String curveId;
-
     @NotBlank(message = "Term is mandatory")
     @Pattern(regexp = "^[0-9]+(\\.[0-9]+)?$", message = "Term must be a numeric value")
     private String term;
-
     @NotBlank(message = "Value is mandatory")
     @Pattern(regexp = "^[0-9]+(\\.[0-9]+)?$", message = "Value must be a numeric value")
     private String value;
+
 
     public CurvePointDTO() {
     }

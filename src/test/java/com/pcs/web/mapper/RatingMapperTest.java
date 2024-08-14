@@ -1,7 +1,6 @@
 package com.pcs.web.mapper;
 
 import com.pcs.model.Rating;
-import com.pcs.repository.RatingRepository;
 import com.pcs.service.RatingService;
 import com.pcs.web.dto.RatingDTO;
 import org.junit.jupiter.api.Test;
@@ -20,8 +19,6 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class RatingMapperTest {
 
-    @Mock
-    private RatingRepository ratingRepository;
     @InjectMocks
     private RatingMapper ratingMapper;
     @Mock

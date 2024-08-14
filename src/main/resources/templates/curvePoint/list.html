@@ -10,6 +10,7 @@
 <div class="container">
 	<div class="row">
 		<div class="col-6">
+			<span th:if="${hasRoleAdmin}"><a href="/user/list">Users List</a>&nbsp;|&nbsp;</span>
 			<a href="/bidList/list">Bid List</a>&nbsp;|&nbsp;
 			<a href="/curvePoint/list">Curve Points</a>&nbsp;|&nbsp;
 			<a href="/rating/list">Ratings</a>&nbsp;|&nbsp;
@@ -17,8 +18,8 @@
 			<a href="/ruleName/list">Rule</a>
 		</div>
 		<div class="col-6 text-right">
-			Logged in user: <b th:inline="text"  class="user"> Albert </b>
-			<form th:action="@{/app-logout}" method="POST">
+			Logged in user: <b th:inline="text"  class="user"> <span th:text="${connectedUserName}"></span> </b>
+			<form th:action="@{/logout}" method="POST">
 				<input type="submit" value="Logout"/>
 			</form>
 		</div>
@@ -39,9 +40,6 @@
 			<tbody>
 				<tr th:each="curvePointDTO : ${curvePointDTOs}">
 					<td style="width: 10%" th:text="${curvePointDTO.id}"></td>
-					<!-- errur en double ?
-					<td th:text="${curvePoint.id}"></td>
-					-->
 					<td th:text="${curvePointDTO.curveId}"></td>
 					<td th:text="${curvePointDTO.term}"></td>
 					<td th:text="${curvePointDTO.value}"></td>

@@ -22,7 +22,7 @@ public class UniqueUserNameValidationService {
         }
         String message = "";
         if (userNamesUsersList.contains(userDTOToValidate.getUsername())) {
-            message = "The UserName " + userDTOToValidate.getUsername() + " is already in use. " +
+            message = "UserName " + userDTOToValidate.getUsername() + " is already in use. " +
                     "Please choose another one.";
         }
         return message;

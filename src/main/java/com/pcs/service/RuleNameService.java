@@ -2,7 +2,6 @@ package com.pcs.service;
 
 import com.pcs.model.RuleName;
 import com.pcs.repository.RuleNameRepository;
-import com.pcs.web.mapper.RuleNameMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

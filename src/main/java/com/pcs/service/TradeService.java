@@ -2,7 +2,6 @@ package com.pcs.service;
 
 import com.pcs.model.Trade;
 import com.pcs.repository.TradeRepository;
-import com.pcs.web.mapper.TradeMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,7 +1,6 @@
 package com.pcs.web.mapper;
 
 import com.pcs.model.CurvePoint;
-import com.pcs.repository.CurvePointRepository;
 import com.pcs.service.CurvePointService;
 import com.pcs.web.dto.CurvePointDTO;
 import org.junit.jupiter.api.Test;
@@ -19,8 +18,6 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class CurvePointMapperTest {
 
-    @Mock
-    private CurvePointRepository curvePointRepository;
     @InjectMocks
     private CurvePointMapper curvePointMapper;
     @Mock

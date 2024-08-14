@@ -1,6 +1,7 @@
 package com.pcs.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.pcs.configuration.ConnectedUser;
 import com.pcs.model.CurvePoint;
 import com.pcs.service.CurvePointService;
 import com.pcs.web.dto.CurvePointDTO;
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
@@ -33,6 +35,8 @@ public class CurvePointControllerTest {
     private CurvePointService curvePointService;
     @MockBean
     private CurvePointMapper curvePointMapper;
+    @MockBean
+    private ConnectedUser connectedUser;
     @Autowired
     private MockMvc mockMvc;
 
@@ -47,6 +51,9 @@ public class CurvePointControllerTest {
         expectedCurvePointDTOs.add(curvePointDTO1);
         expectedCurvePointDTOs.add(curvePointDTO2);
         when(curvePointMapper.getCurvePointDTOs()).thenReturn(expectedCurvePointDTOs);
+        when(connectedUser.getUsernamePasswordLoginInfo(any(UsernamePasswordAuthenticationToken.class)))
+                .thenReturn("albert");
+        when(connectedUser.hasRole(any(UsernamePasswordAuthenticationToken.class), anyString())).thenReturn(true);
         //when
         mockMvc.perform(get("/curvePoint/list"))
                 //then
@@ -54,6 +61,10 @@ public class CurvePointControllerTest {
                 .andExpect(view().name("curvePoint/list"))
                 .andExpect(model().attributeExists("curvePointDTOs"))
                 .andExpect(model().attribute("curvePointDTOs", expectedCurvePointDTOs))
+                .andExpect(model().attributeExists("connectedUserName"))
+                .andExpect(model().attribute("connectedUserName", "albert"))
+                .andExpect(model().attributeExists("hasRoleAdmin"))
+                .andExpect(model().attribute("hasRoleAdmin", true))
                 .andExpect(status().is2xxSuccessful());
     }
 

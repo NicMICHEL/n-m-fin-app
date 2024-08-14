@@ -1,7 +1,6 @@
 package com.pcs.web.mapper;
 
 import com.pcs.model.RuleName;
-import com.pcs.repository.RuleNameRepository;
 import com.pcs.service.RuleNameService;
 import com.pcs.web.dto.RuleNameDTO;
 import org.junit.jupiter.api.Test;
@@ -20,8 +19,6 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 public class RuleNameMapperTest {
 
-    @Mock
-    private RuleNameRepository ruleNameRepository;
     @InjectMocks
     private RuleNameMapper ruleNameMapper;
     @Mock

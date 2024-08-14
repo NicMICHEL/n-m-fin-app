@@ -2,7 +2,6 @@ package com.pcs.service;
 
 import com.pcs.model.User;
 import com.pcs.repository.UserRepository;
-import com.pcs.web.mapper.UserMapper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +58,16 @@ public class UserService {
         } else {
             logger.error("Unable to find and delete user corresponding to id {}", id);
             throw new IllegalArgumentException("Invalid user id");
+        }
+    }
+
+    public User getUserByUsername(String username) throws IllegalArgumentException {
+        Optional<User> testUser = userRepository.getUserByUsername(username);
+        if (testUser.isPresent()) {
+            return testUser.get();
+        } else {
+            logger.error("Unable to find user corresponding to username {}", username);
+            throw new IllegalArgumentException("Invalid user username");
         }
     }
 

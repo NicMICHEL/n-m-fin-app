@@ -1,27 +1,15 @@
-# spring-boot
-## Technical:
+Poseidon Capital Solutions
+A web application for financial transactions.
 
-1. Spring Boot 3.1.0
-2. Java 17
-3. Thymeleaf
-4. Bootstrap v.4.3.1
+Prerequisites
+This app uses Java to run and stores the data in Mysql DB. To install the software, you need Java 17 , Maven 3.9.6 , Mysql 8.0.34
 
+After installing mysql, you will be asked to configure the password for the default root account. This code uses :
+- the default root account to connect and the password can be set as rootrootA.1
+- another account with admin as username and adminA.1 as password.
 
-## Setup with Intellij IDE
-1. Create project from Initializr: File > New > project > Spring Initializr
-2. Add lib repository into pom.xml
-3. Add folders
-    - Source root: src/main/java
-    - View: src/main/resources
-    - Static: src/main/resource/static
-4. Create database with name "demo" as configuration in application.properties
-5. Run sql script to create table doc/data.sql
+Running App
+Post installation of MySQL, Java and Maven, you will have to set up the tables and data in the data base. For this, please run the sql commands present in the PCSDataBase.sql file under the resources folder in the code base. Two users are already registered in the database : user (password : aA!1user, role : USER), admin (password : aA!1admin, role : ADMIN). Only the ADMIN role can create, read, update and delete a user.
 
-## Implement a Feature
-1. Create mapping domain class and place in package com.nnk.springboot.domain
-2. Create repository class and place in package com.nnk.springboot.repositories
-3. Create controller class and place in package com.nnk.springboot.controllers
-
-## Security
-1. Create user service to load user from  database and place in package com.nnk.springboot.services
-2. Add configuration class and place in package com.nnk.springboot.config
+Testing
+The app has unit tests written. To run the tests from maven, execute the following command : mvn test

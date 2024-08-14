@@ -1,6 +1,5 @@
 package com.pcs.web.dto;
 
-import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 
@@ -11,18 +10,20 @@ public class UserDTO {
     private Integer id;
     @NotBlank(message = "Username is mandatory")
     private String username;
-    @Pattern(regexp="^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,16}$", message = "Password must contain "
-            + "at least one lowercase letter(a - z),\n"
-            + "at least one uppercase letter(A - Z),\n"
-            + "at least one numeric value(0-9),\n"
-            + "at least one special symbol(!@#$%^&*=+-_),\n"
-            + "and total length should be greater than or equal to 8 and less or equal to 16.")
+    @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{8,16}$",
+            message = "Password must contain "
+                    + "at least one lowercase letter(a - z),\n"
+                    + "at least one uppercase letter(A - Z),\n"
+                    + "at least one numeric value(0-9),\n"
+                    + "at least one special symbol(!@#$%^&*=+-_),\n"
+                    + "and total length should be greater than or equal to 8 and less or equal to 16.")
     @NotBlank(message = "Password is mandatory")
     private String password;
     @NotBlank(message = "FullName is mandatory")
     private String fullname;
     @NotBlank(message = "Role is mandatory")
     private String role;
+
 
     public UserDTO() {
     }

@@ -1,5 +1,6 @@
 package com.pcs.controller;
 
+import com.pcs.configuration.ConnectedUser;
 import com.pcs.model.CurvePoint;
 import com.pcs.service.CurvePointService;
 import com.pcs.web.dto.CurvePointDTO;
@@ -7,6 +8,7 @@ import com.pcs.web.mapper.CurvePointMapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -23,10 +25,14 @@ public class CurvePointController {
     private CurvePointService curvePointService;
     @Autowired
     private CurvePointMapper curvePointMapper;
+    @Autowired
+    private ConnectedUser connectedUser;
 
     @RequestMapping("/curvePoint/list")
-    public String home(Model model) {
+    public String home(Model model, UsernamePasswordAuthenticationToken token) {
         model.addAttribute("curvePointDTOs", curvePointMapper.getCurvePointDTOs());
+        model.addAttribute("connectedUserName", connectedUser.getUsernamePasswordLoginInfo(token));
+        model.addAttribute("hasRoleAdmin", connectedUser.hasRole(token, "ROLE_ADMIN"));
         return "curvePoint/list";
     }
 

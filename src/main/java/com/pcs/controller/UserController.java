@@ -1,5 +1,6 @@
 package com.pcs.controller;
 
+import com.pcs.configuration.ConnectedUser;
 import com.pcs.model.User;
 import com.pcs.service.UniqueUserNameValidationService;
 import com.pcs.service.UserService;
@@ -8,11 +9,14 @@ import com.pcs.web.mapper.UserMapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Objects;
 
 
 @Controller
@@ -23,12 +27,14 @@ public class UserController {
     private UserMapper userMapper;
     @Autowired
     private UniqueUserNameValidationService uniqueUserNameValidationService;
+    @Autowired
+    private ConnectedUser connectedUser;
 
 
     @RequestMapping("/user/list")
-    public String home(Model model)
-    {
+    public String home(Model model, UsernamePasswordAuthenticationToken token) {
         model.addAttribute("userDTOs", userMapper.getUserDTOs());
+        model.addAttribute("connectedUserName", connectedUser.getUsernamePasswordLoginInfo(token));
         return "user/list";
     }
 
@@ -60,8 +66,12 @@ public class UserController {
 
     @PostMapping("/user/update/{id}")
     public String updateUser(@PathVariable("id") Integer id, @Valid UserDTO userDTO,
-                             BindingResult result, Model model) throws  IllegalArgumentException {
-        String err = uniqueUserNameValidationService.validateUserDTOUserName(userDTO);
+                             BindingResult result, Model model) throws IllegalArgumentException {
+        String initialUserName = userService.getById(id).getUsername();
+        String err = "";
+        if (!Objects.equals(initialUserName, userDTO.getUsername())) {
+            err = uniqueUserNameValidationService.validateUserDTOUserName(userDTO);
+        }
         if (!result.hasErrors() && err.isEmpty()) {
             User user = userMapper.toUser(userDTO);
             userService.update(user);
@@ -79,6 +89,11 @@ public class UserController {
     public String deleteUser(@PathVariable("id") Integer id, Model model) throws IllegalArgumentException {
         userService.deleteById(id);
         return "redirect:/user/list";
+    }
+
+    @RequestMapping("/admin/home")
+    public String adminHome(Model model) {
+        return "redirect:/bidList/list";
     }
 
     @ExceptionHandler
