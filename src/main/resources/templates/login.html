@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Login page</title>
+        <link rel="stylesheet" th:href="@{/css/min.css}"/>
+    </head>
+    <body>
+        <form action="#" th:action="@{/authenticateTheUser}" method="POST">
+            <br>
+            <br>
+            <div class="centerBox400">
+                <div></div>
+                <div>
+                    <table class="t1">
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <span class="lightblueLogo">
+                                    Poseidon Capital Solutions
+                                </span>
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td th:if="${param.error}">
+                                <i>
+                                    Sorry ! You entered invalid username / password.
+                                </i>
+                            </td>
+                            <td th:if="${param.logout}">
+                                <i>
+                                    You have been disconnected.
+                                </i>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <input type="text" name="username" placeholder="username" class="input300"/>
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td ></td>
+                            <td >
+                                <input type="password" name="password" placeholder="password"
+                                        class="input300"/>
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td>
+                                <input type="submit" value="Se connecter" class="blueButton2"/>
+                            </td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </table>
+                </div>
+                <div></div>
+            </div>
+        </form>
+    </body>
+</html>
